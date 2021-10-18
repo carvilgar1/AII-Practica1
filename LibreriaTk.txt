@@ -1,0 +1,57 @@
+from tkinter import *
+from tkinter import messagebox
+
+#Este código permite generar una ventana emergente que incluye una lista de elementos y un scrollbar a la derecha
+window = Toplevel()
+window.geometry('720x360')
+scroll = Scrollbar(window)
+scroll.pack(side=RIGHT, fill=Y)
+listado = Listbox(window, yscrollcommand=scroll.set)
+listado.insert(END, *AQUI LA BUSQUEDA SQL)
+listado.pack(fill=BOTH, expand=YES)
+scroll.config(command=listado.yview)
+
+#Este código permite generar una ventana emergente con un entry y un label se envía al hacer Enter sobre entry
+window1 = Toplevel()
+label = Label(window1, text='AQUI CUALQUIER STRING')
+label.pack()
+entry = Entry(window1)
+entry.pack()
+entry.bind('<Return>', AQUI FUNCION PYTHON)
+window1.mainloop()
+
+#Este código permite generar una ventana raíz con algunos botones
+raiz = Tk()
+boton1 = Button(raiz, text='AQUI CUALQUIER STRING', command=AQUI FUNCION PYTHON)
+boton1.pack()
+boton2 = Button(raiz, text='AQUI CUALQUIER STRING', command=AQUI FUNCION PYTHON)
+boton2.pack()
+boton3 = Button(raiz, text='AQUI CUALQUIER STRING', command=AQUI FUNCION PYTHON)
+boton3.pack()
+boton4 = Button(raiz, text='AQUI CUALQUIER STRING', command=AQUI FUNCION PYTHON)
+boton4.pack()
+boton5 = Button(raiz, text='AQUI CUALQUIER STRING', command=AQUI FUNCION PYTHON)
+boton5.pack()
+raiz.mainloop()
+
+#Este código permite generar una ventana raíz con un menu
+root = Tk()
+menu = Menu(root)
+fila1 = Menu(menu, tearoff=0)
+fila1.add_command(label='AQUI CUALQUIER STRING', command=AQUI FUNCION PYTHON)
+fila1.add_command(label="AQUI CUALQUIER STRING", command=AQUI FUNCION PYTHON)
+
+opcion_datos = menu.add_cascade(label='AQUI CUALQUIER STRING', menu = fila1)
+
+fila2 = Menu(menu, tearoff=0)
+fila2.add_command(label='AQUI CUALQUIER STRING', command=AQUI FUNCION PYTHON)
+fila2.add_command(label="AQUI CUALQUIER STRING", command=AQUI FUNCION PYTHON)
+fila2.add_command(label="AQUI CUALQUIER STRING", command=AQUI FUNCION PYTHON)
+
+opcion_buscar = menu.add_cascade(label='AQUI CUALQUIER STRING', menu = fila2)
+
+root.configure(menu=menu)
+root.mainloop()
+
+#Generar una ventana emergente de aviso
+messagebox.showinfo('STRING', 'STRING')
