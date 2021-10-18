@@ -5,6 +5,11 @@ import sqlite3
 import urllib.request
 import re
 
+#Error SSL
+if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
+getattr(ssl, '_create_unverified_context', None)):
+    ssl._create_default_https_context = ssl._create_unverified_context
+
 #Se define una variable estatica a la que pueda acceder cualquier funcion. Crea y se conecta a una base de datos
 con = sqlite3.connect('database.db')
 
