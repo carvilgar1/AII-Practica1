@@ -53,5 +53,11 @@ opcion_buscar = menu.add_cascade(label='AQUI CUALQUIER STRING', menu = fila2)
 root.configure(menu=menu)
 root.mainloop()
 
+#Este código permite generar una ventana con un spin box
+v = Toplevel()
+entry = Spinbox(v, values=list(tipos)) 
+entry.bind('<Return>', listarVinosUva)
+entry.pack()
+
 #Generar una ventana emergente de aviso
 messagebox.showinfo('STRING', 'STRING')
