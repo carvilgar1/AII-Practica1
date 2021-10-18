@@ -1,3 +1,6 @@
+# encoding: utf-8
+# -*- coding: utf-8 -*-
+
 from tkinter import *
 from tkinter import messagebox
 from bs4 import BeautifulSoup
