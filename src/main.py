@@ -18,6 +18,7 @@ getattr(ssl, '_create_unverified_context', None)):
 
 #Se define una variable estatica a la que pueda acceder cualquier funcion. Crea y se conecta a una base de datos
 con = sqlite3.connect('libros.db')
+
 url = 'https://www.uniliber.com/buscar/libros_pagina_' 
 url2 = '?descripcion%5B0%5D=CL%C3%81SICOS'
 editoriales = set()
@@ -44,7 +45,6 @@ def instanciar_db():
     crear_tablas()
     cursor = con.cursor()
     for i in range(2):
-
         web = urllib.request.urlopen(url+str(i+1)+url2).read().decode('utf-8')
         arbol = BeautifulSoup(web, 'lxml')
         descripciones = arbol.findAll("div", class_="description")
@@ -54,18 +54,23 @@ def instanciar_db():
             editorial = ''
             estado = ''
             for children in descripcion.findAll("div"):
-                if('class' in children.attrs):
-                    continue
-                print(children.strong)
-                if(children.strong == "Editorial:"):
-                    editorial = children.contents[2]
-                    print(editorial)
-                if(children.strong == "Estado de conservación:"):
-                    estado = children.contents[2]
-                print(editorial,estado)
+                if('class' not in children.attrs and len(children.contents)>=2):
+                    if(children.contents[1].text == "Editorial:"):
+                        editorial = children.contents[2].strip()
+                        editoriales.add(editorial)
+                    if(children.contents[1].text == "Estado de conservación:"):
+                        estado = children.contents[2].strip()
             precio = descripcion.find("span", class_="precio").string.replace("€","")
-            # print(titulo, autor,editorial,estado,precio)
-
+            link = descripcion.find("a", class_="libreria")['href']
+            libreria = urllib.request.urlopen('https://www.uniliber.com' + str(link)).read().decode('utf-8')
+            arbol2 = BeautifulSoup(libreria, 'lxml')
+            nombre = arbol2.find("div", class_="info").find("h1").string    
+            tlf = arbol2.find("div", class_="info-libreria").find("th", text="Teléfono:").findNext().text
+            cursor.execute("INSERT INTO LIBROS VALUES (?,?,?,?,?,?,?);", (titulo, autor,editorial,estado,float(precio), nombre,tlf))
+            print(titulo)
+    count = cursor.execute("SELECT COUNT(*) FROM LIBROS").fetchone()[0]
+    messagebox.showinfo("Numero de libros", "Se han almacenado " + str(count) + " libros")
+    
     
     
     
@@ -181,3 +186,4 @@ if __name__ == '__main__':
 
     root.configure(menu=menu)
     root.mainloop()
+
