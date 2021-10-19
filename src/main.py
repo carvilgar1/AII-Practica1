@@ -56,6 +56,7 @@ def instanciar_db():
                 if('class' not in children.attrs and len(children.contents)>=2):
                     if(children.contents[1].text == "Editorial:"):
                         editorial = children.contents[2].strip()
+                        editoriales.add(editorial)
                     if(children.contents[1].text == "Estado de conservación:"):
                         estado = children.contents[2].strip()
                 
