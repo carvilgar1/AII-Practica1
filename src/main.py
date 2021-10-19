@@ -1,6 +1,7 @@
 # encoding: utf-8
 # -*- coding: utf-8 -*-
 
+from sqlite3.dbapi2 import Cursor
 from tkinter import *
 from tkinter import messagebox
 from bs4 import BeautifulSoup
@@ -59,7 +60,6 @@ def instanciar_db():
                         editoriales.add(editorial)
                     if(children.contents[1].text == "Estado de conservación:"):
                         estado = children.contents[2].strip()
-                
             precio = descripcion.find("span", class_="precio").string.replace("€","")
             link = descripcion.find("a", class_="libreria")['href']
             libreria = urllib.request.urlopen('https://www.uniliber.com' + str(link)).read().decode('utf-8')
@@ -76,7 +76,114 @@ def instanciar_db():
     
     con.commit()
 
-if __name__ == '__main__':
-
+def cargar_datos():
+    crear_tablas()
     instanciar_db()
+    #Generar una ventana emergente de aviso
+    messagebox.showinfo('Aviso', 'Los datos se han cargado correctamente')
+
+def listar_libros():
+    #Este codigo permite generar una ventana emergente que incluye una lista de elementos y un scrollbar a la derecha
+    ''' muestre en una ventana (con una listbox con scrollbar) todos los (título,
+    autor, editorial y precio). '''
+    cursor = con.cursor()
+    listado = cursor.execute('SELECT TITULO, AUTOR, EDITORIAL, PRECIO FROM LIBROS').fetchall()
+    window = Toplevel()
+    window.geometry('720x360')
+    scroll = Scrollbar(window)
+    scroll.pack(side=RIGHT, fill=Y)
+    listado = Listbox(window, yscrollcommand=scroll.set)
+    listado.insert(END, *listado)
+    listado.pack(fill=BOTH, expand=YES)
+    scroll.config(command=listado.yview)
+
+def listar_librerias():
+    #Este codigo permite generar una ventana emergente que incluye una lista de elementos y un scrollbar a la derecha
+    '''muestre en una ventana (con una listbox con scrollbar) los nombres
+    y teléfonos de todas las librerías que hay en la BD. '''
+    cursor = con.cursor()
+    listado = set(cursor.execute('SELECT LIBRERIA, TELEFONO FROM LIBROS').fetchall())
+    window = Toplevel()
+    window.geometry('720x360')
+    scroll = Scrollbar(window)
+    scroll.pack(side=RIGHT, fill=Y)
+    listado = Listbox(window, yscrollcommand=scroll.set)
+    listado.insert(END, *listado)
+    listado.pack(fill=BOTH, expand=YES)
+    scroll.config(command=listado.yview)
+
+def libros_por_editorial():
+    def search_libros(event):
+        #Este codigo permite generar una ventana emergente que incluye una lista de elementos y un scrollbar a la derecha
+        '''muestre en otra ventana (con una
+        listbox con scrollbar) todos los libros (título, autor, estado de conservación, librería y precio) que
+        hay en la BD que de esa editorial'''
+        editorial = entry.get()
+        cursor = con.cursor()
+        listado = cursor.execute('SELECT TITULO, AUTOR, ESTADO, LIBRERIA, PRECIO FROM LIBROS WHERE EDITORIAL = ?', [editorial]).fetchall()
+        window = Toplevel()
+        window.geometry('720x360')
+        scroll = Scrollbar(window)
+        scroll.pack(side=RIGHT, fill=Y)
+        listado = Listbox(window, yscrollcommand=scroll.set)
+        listado.insert(END, *listado)
+        listado.pack(fill=BOTH, expand=YES)
+        scroll.config(command=listado.yview)
+    
+    #Este código permite generar una ventana con un spin box
+    v = Toplevel()
+    entry = Spinbox(v, values=list(editoriales)) 
+    entry.bind('<Return>', search_libros)
+    entry.pack()
+
+def libros_por_titulo_o_autor():
+    def search_libros(event):
+        #Este codigo permite generar una ventana emergente que incluye una lista de elementos y un scrollbar a la derecha
+        '''muestre en otra ventana (en una listbox con
+        scrollbar) todos los libros que contengan esa palabra en el título o el autor (título, autor, estado de
+        conservación, librería y precio)'''
+        titulo_o_autor = entry.get()
+        cursor = con.cursor()
+        listado = cursor.execute('SELECT TITULO, AUTOR, ESTADO, LIBRERIA, PRECIO FROM LIBROS WHERE AUTOR = ? OR TITULO = ?', [titulo_o_autor, titulo_o_autor]).fetchall()
+        window = Toplevel()
+        window.geometry('720x360')
+        scroll = Scrollbar(window)
+        scroll.pack(side=RIGHT, fill=Y)
+        listado = Listbox(window, yscrollcommand=scroll.set)
+        listado.insert(END, *listado)
+        listado.pack(fill=BOTH, expand=YES)
+        scroll.config(command=listado.yview)
+    
+    #Este codigo permite generar una ventana emergente con un entry y un label se envi­a al hacer Enter sobre entry
+    window1 = Toplevel()
+    label = Label(window1, text='Introduce el titulo o autor')
+    label.pack()
+    entry = Entry(window1)
+    entry.pack()
+    entry.bind('<Return>', search_libros)
+    window1.mainloop()
+
+if __name__ == '__main__':
+    #Este codigo permite generar una ventana rai­z con un menu
+    
+    root = Tk()
+    menu = Menu(root)
+    fila1 = Menu(menu, tearoff=0)
+    fila1.add_command(label='Cargar', command=cargar_datos)
+    fila1.add_command(label='Salir', command=root.destroy)
+
+    opcion_datos = menu.add_cascade(label='Datos', menu = fila1)
+
+    fila2 = Menu(menu, tearoff=0)
+    fila2.add_command(label='Libros', command=listar_libros)
+    fila2.add_command(label="Librerias", command=listar_librerias)
+    opcion_buscar = menu.add_cascade(label='Listar', menu = fila2)
+
+    fila3 = Menu(menu, tearoff=0)
+    fila3.add_command(label='Libros por editorial', command=libros_por_editorial)
+    fila3.add_command(label="Libros por título o autor", command=libros_por_titulo_o_autor)
+    opcion_buscar = menu.add_cascade(label='Buscar', menu = fila3)
+
+    root.configure(menu=menu)
+    root.mainloop()
 
