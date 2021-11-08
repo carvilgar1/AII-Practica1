@@ -1,2 +1,5 @@
 #Ignora el indice de Whoosh de la practica-2
 /practica-2/indice
+
+#Ignora el codigo fuente de la practica-1
+/practica-1
