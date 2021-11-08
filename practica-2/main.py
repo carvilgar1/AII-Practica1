@@ -40,10 +40,11 @@ def crea_index(dirindex):
             os.mkdir(dirindex)
 
     if not len(os.listdir(dirindex))==0:
-        sn=input("Indice no vacío. Desea reindexar?(s/n)")
+
+        sn=messagebox.askyesno(message="Desea reindexar?(s/n)", title="Indice no vacío")
     else:
-        sn='s' 
-    if sn == 's':
+        sn=True 
+    if sn == True:
         ix = create_in(dirindex, schema=crea_schema())
         writer = ix.writer()
         #Aqui se hace el scraping y se va anyadiendo individualmente cada documento con writer.add_document...               
