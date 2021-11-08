@@ -10,7 +10,7 @@ import os
 import ssl
 from datetime import datetime
 from whoosh.index import create_in,open_dir
-from whoosh.fields import Schema, TEXT, DATETIME, ID
+from whoosh.fields import Schema, TEXT, DATETIME, ID, KEYWORD
 from whoosh.qparser import QueryParser, MultifieldParser
 from whoosh import qparser
 
@@ -23,7 +23,9 @@ getattr(ssl, '_create_unverified_context', None)):
 def crea_schema():
     return Schema(field_1 = TEXT(stored=TRUE), 
                 field_2 = TEXT(stored=TRUE), 
-                field_n = TEXT(stored=TRUE))
+                field_3 = TEXT(stored=TRUE),
+                field_n = KEYWORD(stored = True, commas=True, lowercase=True),
+                url = ID(stored = True))
 
 
 def crea_index(dirindex):
