@@ -189,6 +189,33 @@ def buscar_categoria():
     seleccionar una categoría de todas las que hay en el índice, y muestre  en  otra 
     ventana  (con una  listbox  con  scrollbar) todas las noticias (categoría, fecha, 
     título) de dicha categoría.'''
+    def search(event):
+        ix=open_dir('indice')   
+
+        with ix.searcher() as searcher:
+            myquery = QueryParser('categoria', ix.schema).parse(entry.get())
+            results = searcher.search(myquery)
+            #Este codigo permite generar una ventana emergente que incluye una lista de elementos y un scrollbar a la derecha
+            window = Toplevel()
+            window.geometry('720x360')
+            scroll = Scrollbar(window)
+            scroll.pack(side=RIGHT, fill=Y)
+            listado = Listbox(window, yscrollcommand=scroll.set)
+            for r in results:
+                listado.insert(END, r['categoria'])
+                listado.insert(END, r['fecha'])
+                listado.insert(END, r['titulo'])
+                listado.insert(END, '')
+            listado.pack(fill=BOTH, expand=YES)
+            scroll.config(command=listado.yview)
+    
+    ix=open_dir('indice')
+    with ix.searcher() as searcher:
+        set_categorias = set(searcher.lexicon('categoria'))
+    v = Toplevel()
+    entry = Spinbox(v, values=list(set_categorias)) 
+    entry.bind('<Return>', search)
+    entry.pack()
 
 def eliminar_noticia():
     #TODO
