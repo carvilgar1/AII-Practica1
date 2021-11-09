@@ -85,7 +85,7 @@ def buscar_titulo():
 
         with ix.searcher() as searcher:
             myquery = QueryParser('titulo', ix.schema).parse(entry.get())
-            results = searcher.search(myquery)
+            results = searcher.search(myquery,limit=None)
             #Este codigo permite generar una ventana emergente que incluye una lista de elementos y un scrollbar a la derecha
             window = Toplevel()
             window.geometry('720x360')
@@ -118,7 +118,7 @@ def buscar_resumen_titulo():
 
         with ix.searcher() as searcher:
             myquery = MultifieldParser(["titulo","resumen"], ix.schema).parse(entry.get())
-            results = searcher.search(myquery)
+            results = searcher.search(myquery,limit=None)
             #Este codigo permite generar una ventana emergente que incluye una lista de elementos y un scrollbar a la derecha
             window = Toplevel()
             window.geometry('720x360')
@@ -202,7 +202,7 @@ def buscar_categoria():
 
         with ix.searcher() as searcher:
             myquery = QueryParser('categoria', ix.schema).parse(entry.get())
-            results = searcher.search(myquery)
+            results = searcher.search(myquery,limit=None)
             #Este codigo permite generar una ventana emergente que incluye una lista de elementos y un scrollbar a la derecha
             window = Toplevel()
             window.geometry('720x360')
