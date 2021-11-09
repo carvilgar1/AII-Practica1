@@ -25,9 +25,11 @@ url = 'https://www.sensacine.com/'
 
 #Esta función crea el esquema donde se almacenaran los documentos
 def crea_schema():
-    return Schema(categoria = TEXT(stored=TRUE), 
-                fecha = DATETIME(stored=TRUE), 
-                titulo = TEXT(stored=TRUE),
+    return Schema(
+                id = ID(stored=True, unique=True),
+                categoria = TEXT(stored=True), 
+                fecha = DATETIME(stored=True), 
+                titulo = TEXT(stored=True),
                 resumen = TEXT(stored = True))
 
 
@@ -68,7 +70,7 @@ def crea_index(dirindex):
                 if not pelicula.find("div", class_="meta-body") == None:
                     content = pelicula.find("div", class_="meta-body").text
 
-                writer.add_document(categoria = str(category), fecha = parsed_date, titulo = str(title), resumen = str(content))
+                writer.add_document(id=str(j),categoria = str(category), fecha = parsed_date, titulo = str(title), resumen = str(content))
         messagebox.showinfo("Fin  de indexado", "Se han indexado " + str(j) + " noticias de peliculas.")
         writer.commit()
 
@@ -96,7 +98,6 @@ def buscar_titulo():
                 listado.insert(END, '')
             listado.pack(fill=BOTH, expand=YES)
             scroll.config(command=listado.yview)
-    
     #Este codigo permite generar una ventana emergente con un entry y un label se envÃ­a al hacer Enter sobre entry
     window1 = Toplevel()
     label = Label(window1, text='Inserte palabras para buscar en el título')
@@ -218,12 +219,51 @@ def buscar_categoria():
     entry.pack()
 
 def eliminar_noticia():
-    #TODO
     '''muestre una ventana con un botón y un entry que 
     permita al usuario introducir un título de noticias (o palabras que estén en el título).  
     Cuando se pulse el botón, se muestra una lista con las noticias (categoría, fecha, 
     título) con dicho título. A continuación se muestra una ventana para que el usuario 
     confirme que desea realizar los cambios. Si se confirma, se eliminan dichas noticias'''
+    def modificar():
+        #comprobamos el formato de la entrada
+        ix=open_dir("Indice")
+        lista=[]
+        
+        with ix.searcher() as searcher:
+            query = QueryParser("titulo", ix.schema).parse(str(en.get()))
+            results = searcher.search(query, limit=None) 
+            v = Toplevel()
+            v.title("Listado de peliculas a eliminar")
+            v.geometry('800x150')
+            sc = Scrollbar(v)
+            sc.pack(side=RIGHT, fill=Y)
+            lb = Listbox(v, yscrollcommand=sc.set)
+            lb.pack(side=BOTTOM, fill = BOTH)
+            sc.config(command = lb.yview)
+            for r in results:
+                lb.insert(END,r['categoria'])
+                lb.insert(END,r['fecha'])
+                lb.insert(END,r['titulo'])
+                lb.insert(END,'')
+                lista.append(r) 
+        respuesta = messagebox.askyesno(title="Confirmar",message="Esta seguro que quiere eliminar estas noticias?")
+        if respuesta:
+            v.destroy()
+            writer = ix.writer()
+            for r in lista:
+                writer.delete_document(int(r['id'])-1)
+            writer.commit()
+
+    v = Toplevel()
+    v.title("Eliminar noticia")
+    l = Label(v, text="Introduzca el titulo de la noticia:")
+    l.pack(side=LEFT)
+    en = Entry(v)
+    en.pack(side=LEFT)
+
+    bt = Button(v, text='Modificar', command=modificar)
+    bt.pack(side=LEFT)
+
 
 if __name__ == '__main__':
     #Este codigo permite generar una ventana raiz con un menu
