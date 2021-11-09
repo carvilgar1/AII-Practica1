@@ -50,33 +50,115 @@ def crea_index(dirindex):
         #Aqui se hace el scraping y se va anyadiendo individualmente cada documento con writer.add_document...               
         writer.commit()
 
-def ejemplo_busqueda():
-    ix=open_dir('indice')   
-
-    with ix.searcher() as searcher:
-        myquery = MultifieldParser(["asunto","contenido"], ix.schema).parse('query')
-        results = searcher.search(myquery)
-
 def buscar_titulo():
     '''muestre  una  ventana  con un entry que permita al  
     usuario  introducir varias palabras, y muestre  en  otra ventana  (con una  
     listbox    con    scrollbar)  todas  las  noticias  (categoría,  fecha,  título)  que 
     contengan alguna de esas palabras en el título.'''
-    #TODO
+    def search(event):
+        ix=open_dir('indice')   
+
+        with ix.searcher() as searcher:
+            myquery = QueryParser('titulo', ix.schema).parse(entry.get())
+            results = searcher.search(myquery)
+            #Este codigo permite generar una ventana emergente que incluye una lista de elementos y un scrollbar a la derecha
+            window = Toplevel()
+            window.geometry('720x360')
+            scroll = Scrollbar(window)
+            scroll.pack(side=RIGHT, fill=Y)
+            listado = Listbox(window, yscrollcommand=scroll.set)
+            for r in results:
+                listado.insert(END, r['categoria'])
+                listado.insert(END, r['fecha'])
+                listado.insert(END, r['titulo'])
+                listado.insert(END, '')
+            listado.pack(fill=BOTH, expand=YES)
+            scroll.config(command=listado.yview)
+    
+    #Este codigo permite generar una ventana emergente con un entry y un label se envÃ­a al hacer Enter sobre entry
+    window1 = Toplevel()
+    label = Label(window1, text='Inserte palabras para buscar en el título')
+    label.pack()
+    entry = Entry(window1)
+    entry.pack()
+    entry.bind('<Return>', search)
+    window1.mainloop()
 
 def buscar_resumen_titulo():
-    #TODO
     '''muestre  una  ventana  con un entry que 
     permita al  usuario  introducir una frase, y muestre  en  otra ventana  (con una  
     listbox  con  scrollbar) todas las noticias (categoría, fecha, título, resumen) 
     que contengan esa frase en el resumen o el título. '''
+    def search(event):
+        ix=open_dir('indice')   
+
+        with ix.searcher() as searcher:
+            myquery = MultifieldParser(["titulo","resumen"], ix.schema).parse(entry.get())
+            results = searcher.search(myquery)
+            #Este codigo permite generar una ventana emergente que incluye una lista de elementos y un scrollbar a la derecha
+            window = Toplevel()
+            window.geometry('720x360')
+            scroll = Scrollbar(window)
+            scroll.pack(side=RIGHT, fill=Y)
+            listado = Listbox(window, yscrollcommand=scroll.set)
+            for r in results:
+                listado.insert(END, r['categoria'])
+                listado.insert(END, r['fecha'])
+                listado.insert(END, r['titulo'])
+                listado.insert(END, r['resumen'])
+                listado.insert(END, '')
+            listado.pack(fill=BOTH, expand=YES)
+            scroll.config(command=listado.yview)
+    
+    #Este codigo permite generar una ventana emergente con un entry y un label se envÃ­a al hacer Enter sobre entry
+    window1 = Toplevel()
+    label = Label(window1, text='Inserte palabras para buscar en el título o en el resumen')
+    label.pack()
+    entry = Entry(window1)
+    entry.pack()
+    entry.bind('<Return>', search)
+    window1.mainloop()
+
 
 def buscar_fecha():
-    #TODO
     '''muestre  una  ventana  con un entry que  permita  al  
     usuario  introducir una fecha (en formato dd MMM aaaa, por ejemplo ’11 
     nov 2021’), y  muestre  en  otra ventana (con una  listbox  con  scrollbar)  
     todas las noticias (categoría, fecha, título) desde ese día (inclusive)'''
+
+    def search(event):
+        fecha = entry.get().strip()
+        if re.match(r'\d{2} [a-z]{3} \d{4}', fecha):
+            ix=open_dir('indice')   
+
+            with ix.searcher() as searcher:
+                myquery = MultifieldParser(["titulo","resumen"], ix.schema).parse(fecha)
+                results = searcher.search(myquery)
+                #Este codigo permite generar una ventana emergente que incluye una lista de elementos y un scrollbar a la derecha
+                window = Toplevel()
+                window.geometry('720x360')
+                scroll = Scrollbar(window)
+                scroll.pack(side=RIGHT, fill=Y)
+                listado = Listbox(window, yscrollcommand=scroll.set)
+                for r in results:
+                    listado.insert(END, r['categoria'])
+                    listado.insert(END, r['fecha'])
+                    listado.insert(END, r['titulo'])
+                    listado.insert(END, '')
+                listado.pack(fill=BOTH, expand=YES)
+                scroll.config(command=listado.yview)
+        else:
+            #Generar una ventana emergente de aviso
+            messagebox.showinfo('Error', 'Formato de fecha incorrecto')
+
+    #Este codigo permite generar una ventana emergente con un entry y un label se envia al hacer Enter sobre entry
+    window1 = Toplevel()
+    label = Label(window1, text='Introducir una fecha (en formato dd MMM aaaa)')
+    label.pack()
+    entry = Entry(window1)
+    entry.pack()
+    entry.bind('<Return>', search)
+    window1.mainloop()
     
 
 def buscar_categoria():
