@@ -152,7 +152,7 @@ def buscar_fecha():
 
     def search(event):
         fecha = entry.get().strip()
-        if re.match(r'\d{2} [A-Za-z]{3} \d{4}', fecha):
+        if re.match(r'\d{2} [A-Za-z]{3}. \d{4}', fecha):
             ix=open_dir('indice')   
  
             t = datetime.datetime.strptime(fecha, "%d %b %Y") 
@@ -183,7 +183,7 @@ def buscar_fecha():
 
     #Este codigo permite generar una ventana emergente con un entry y un label se envia al hacer Enter sobre entry
     window1 = Toplevel()
-    label = Label(window1, text='Introducir una fecha (en formato dd MMM aaaa)')
+    label = Label(window1, text='Introducir una fecha (en formato dd MMM. aaaa)')
     label.pack()
     entry = Entry(window1)
     entry.pack()
