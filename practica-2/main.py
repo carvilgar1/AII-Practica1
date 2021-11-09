@@ -11,6 +11,7 @@ import ssl
 from whoosh.index import create_in,open_dir
 from whoosh.fields import Schema, TEXT, DATETIME, ID, KEYWORD
 from whoosh.qparser import QueryParser, MultifieldParser
+from whoosh.qparser.dateparse import DateParserPlugin
 from whoosh import qparser
 import datetime
 import locale
@@ -151,12 +152,18 @@ def buscar_fecha():
 
     def search(event):
         fecha = entry.get().strip()
-        if re.match(r'\d{2} [a-z]{3} \d{4}', fecha):
+        if re.match(r'\d{2} [A-Za-z]{3} \d{4}', fecha):
             ix=open_dir('indice')   
+ 
+            t = datetime.datetime.strptime(fecha, "%d %b %Y") 
+            t2 = datetime.date.today()
+            date = str(t)[:11].replace("-","")
+            date2 = str(t2).replace("-","")
 
             with ix.searcher() as searcher:
-                myquery = MultifieldParser(["titulo","resumen"], ix.schema).parse(fecha)
-                results = searcher.search(myquery)
+                qp = QueryParser('fecha', ix.schema)
+                myquery = qp.parse('['+date+ ' TO ' + date2 +']')
+                results = searcher.search(myquery, limit=None)
                 #Este codigo permite generar una ventana emergente que incluye una lista de elementos y un scrollbar a la derecha
                 window = Toplevel()
                 window.geometry('720x360')
