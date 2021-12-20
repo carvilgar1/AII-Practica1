@@ -8,7 +8,7 @@ Se desea construir una pagina web, que permita recomendar a usuarios peliculas e
 Construir el modelo de datos en Django que almacene la informacion siguiente:<br/><br/>
 
 a)	Usuario: Id, Edad, Sexo(M,F), Ocupacion, CodigoPostal.<br/>
-b)	Pelicula: Id, Titulo, FechaEstreno, FechaEstrenoVideo y IMDbURL.<br/>
+b)	Pelicula: Id, Titulo, FechaEstreno, FechaEstrenoVideo y IMDbURL y Categorias.<br/>
 c)	Puntuacion: Puntacion de usuario a pelicula, y fecha/hora en que se produjo.<br/>
 Las puntuaciones son numericas entre 1 y 5.<br/><br/>
 
@@ -18,7 +18,9 @@ Poblar la base de datos extrayendo los datos del Dataset100K de Movilens(u.data,
 Se pide construir una web con un menu principal, en la parte superior de la ventana, que permita las siguientes opciones:
 <br/><br/>
 a)	Dado un usuario (Id), le recomiende dos peliculas que no haya puntuado (Titulo). Usando un sistema de recomendacion de tipo filtrado colaborativo basado en usuarios.
-<br/>b)	Dada una pelicula (Id), mostrar las tres peliculas (Titulo) que mas se le parecen.
-<br/>c)	Dado un usuario (Id), mostrar todas las peliculas que ha puntuado (Titulo) y su puntuacion.
+<br/>b) Dado un usuario (Id), le recomiende dos peliculas que no haya puntuado (Titulo). Usando un sistema de recomendacion de tipo filtrado colaborativo basado en items.
+<br/>c)	Dada una pelicula (Id), mostrar las tres peliculas (Titulo) que mas se le parecen.
+<br/>d) Dada una pelicula (Id), mostrar los tres mejores usuarios (Id, Edad, CodigoPostal) a los que se les podria recomendar
+<br/>e)	Dado un usuario (Id), mostrar todas las peliculas que ha puntuado (Titulo) y su puntuacion.
 
 {% endblock %}

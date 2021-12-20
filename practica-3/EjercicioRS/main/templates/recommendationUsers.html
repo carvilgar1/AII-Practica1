@@ -1,0 +1,13 @@
+{%extends 'master.html'%}
+
+{% block titulo %}Usuarios Recomendados para la Pelicula {{film.movieTitle}}{%endblock%}
+
+{% block contenido %}
+	{% for item, score in items %}
+		<ul>
+		<li>User ID:{{item.id}}   Edad:{{item.age}}  CP:{{item.zipCode}}   Score: {{score | floatformat:"2"}}</li>
+		</ul>
+	{% empty %}
+		<h2> Insuficientes datos </h2>
+	{% endfor %}
+{%endblock%}

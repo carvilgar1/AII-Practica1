@@ -3,8 +3,8 @@
 {% block titulo %}Buscar Usuario{%endblock%}
 
 {% block contenido %}
-<form id='form' method='get' action=''>
-{{form.as_p}}
+<form id='form' method='get' action=''>{% csrf_token %}
+{{form}}
 <p><input type='submit' value='Confirm'/></p>
 </form>
 {%endblock%}

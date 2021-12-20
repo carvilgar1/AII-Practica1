@@ -15,7 +15,12 @@ class UserInformation(models.Model):
     zipCode = models.CharField(max_length=8)
     def __str__(self):
         return self.gender+" "+self.zipCode
-  
+    
+class Genre(models.Model):
+    genreName = models.TextField(verbose_name='Genre')
+
+    def __str__(self):
+        return self.genreName
     
 class Film(models.Model):
     movieTitle = models.CharField(max_length=100)
@@ -23,6 +28,8 @@ class Film(models.Model):
     releaseVideoDate = models.DateField(null=True, blank=True)
     IMDbURL = models.URLField(validators=[URLValidator()])
     ratings = models.ManyToManyField(UserInformation, through="Rating")
+    genres = models.ManyToManyField(Genre)
+    
     def __str__(self):
         return self.movieTitle
 

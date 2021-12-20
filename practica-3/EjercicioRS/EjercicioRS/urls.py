@@ -9,6 +9,8 @@ urlpatterns = [
     path('populate/', views.populateDB),
     path('loadRS', views.loadRS),
     path('recommendedFilmsUser', views.recommendedFilmsUser),
+    path('recommendedFilmsUserItem', views.recommendedFilmUserItems),
+    path('recommendedUserFilm', views.recommendedUser),
     path('similarFilms', views.similarFilms),
     path('search', views.search),
     path('admin/', admin.site.urls),

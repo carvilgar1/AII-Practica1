@@ -2,7 +2,7 @@ import shelve
 from main.models import UserInformation, Film, Rating
 from main.forms import UserForm, FilmForm
 from django.shortcuts import render, get_object_or_404
-from main.recommendations import  transformPrefs, getRecommendations, topMatches
+from main.recommendations import  transformPrefs, getRecommendations, topMatches, getRecommendedItems, calculateSimilarItems
 from main.populate import populateDatabase
 
 
@@ -20,12 +20,9 @@ def loadDict():
         Prefs[user][itemid] = rating
     shelf['Prefs']=Prefs
     shelf['ItemsPrefs']=transformPrefs(Prefs)
+    shelf['SimilarItems']=calculateSimilarItems(Prefs, n=10)
     shelf.close()
-    
 
-
-    
-#  CONJUNTO DE VISTAS
 
 def index(request): 
     return render(request,'index.html')
@@ -60,8 +57,30 @@ def recommendedFilmsUser(request):
     form = UserForm()
     return render(request,'search_user.html', {'form': form})
 
-
 # APARTADO B
+def recommendedFilmUserItems(request):
+    if request.method=='GET':
+        form = UserForm(request.GET, request.FILES)
+        if form.is_valid():
+            idUser = form.cleaned_data['id']
+            user = get_object_or_404(UserInformation, pk=idUser)
+            shelf = shelve.open("dataRS.dat")
+            Prefs = shelf['Prefs']
+            SimilarItems = shelf['SimilarItems']
+            shelf.close()
+            rankings = getRecommendedItems(Prefs,SimilarItems,int(idUser))
+            recommended = rankings[:2]
+            films = []
+            scores = []
+            for re in recommended:
+                films.append(Film.objects.get(pk=re[1]))
+                scores.append(re[0])
+            items= zip(films,scores)
+            return render(request,'recommendationItems.html', {'user': user, 'items': items})
+    form = UserForm()
+    return render(request,'search_user.html', {'form': form})
+
+# APARTADO C
 def similarFilms(request):
     film = None
     if request.method=='GET':
@@ -83,7 +102,31 @@ def similarFilms(request):
     form = FilmForm()
     return render(request,'search_film.html', {'form': form})
 
-#APARTADO C
+#APARTADO D
+def recommendedUser(request):
+    if request.method=='GET':
+        form = FilmForm(request.GET, request.FILES)
+        if form.is_valid():
+            idFilm = form.cleaned_data['id']
+            film = get_object_or_404(Film, pk=idFilm)
+            shelf = shelve.open("dataRS.dat")
+            ItemsPrefs = shelf['ItemsPrefs']
+            shelf.close()
+            rankings = getRecommendations(ItemsPrefs,int(idFilm))
+            recommended = rankings[:3]
+            users = []
+            scores = []
+            for re in recommended:
+                print(re)
+                users.append(UserInformation.objects.get(pk=re[1]))
+                scores.append(re[0])
+            items= zip(users,scores)
+            return render(request,'recommendationUsers.html', {'film': film, 'items': items})
+    form = UserForm()
+    return render(request,'search_film.html', {'form': form})
+
+
+#APARTADO E
 def search(request):
     if request.method=='GET':
         form = UserForm(request.GET, request.FILES)

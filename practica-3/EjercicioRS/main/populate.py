@@ -1,4 +1,4 @@
-from main.models import Occupation, UserInformation, Film, Rating
+from main.models import Occupation, UserInformation, Film, Rating, Genre
 from datetime import datetime
 
 path = "ml-100k"
@@ -7,7 +7,8 @@ def deleteTables():
     Rating.objects.all().delete()
     Film.objects.all().delete()
     UserInformation.objects.all().delete()
-    Occupation.objects.all().delete()  
+    Occupation.objects.all().delete()
+    Genre.objects.all().delete()
   
     
 def populateOccupations():
@@ -21,6 +22,23 @@ def populateOccupations():
     Occupation.objects.bulk_create(lista)  # bulk_create hace la carga masiva para acelerar el proceso
     
     print("Occupations inserted: " + str(Occupation.objects.count()))
+    print("---------------------------------------------------------")
+
+def populateGenres():
+    print("Loading Movie Genres...")
+    Genre.objects.all().delete()
+    
+    lista=[]
+    fileobj=open(path+"\\u.genre", "r")
+    for line in fileobj.readlines():
+        rip = str(line.strip()).split('|')
+        if len(rip) != 2:
+            continue
+        lista.append(Genre(id=rip[1], genreName=rip[0]))
+    fileobj.close()
+    Genre.objects.bulk_create(lista)
+    
+    print("Genres inserted: " + str(Genre.objects.count()))
     print("---------------------------------------------------------")
 
 
@@ -50,7 +68,7 @@ def populateFilms():
     print("Loading movies...")
        
     lista_peliculas =[]  # lista de peliculas
-    dict={}
+    dict_categorias = {}
     fileobj=open(path+"\\u.item", "r")
     for line in fileobj.readlines():
         rip = line.split('|')
@@ -65,9 +83,21 @@ def populateFilms():
         id_pe = int(rip[0].strip())
         f = Film(id=id_pe, movieTitle=rip[1].strip(), releaseDate=date_rel, releaseVideoDate=date_rel_video , IMDbURL=rip[4].strip())
         lista_peliculas.append(f)
-        dict[id_pe] = f      
+        
+        lista_aux = []
+        for i in range(5, len(rip)):
+            if rip[i] == '1':
+                lista_aux.append(Genre.objects.get(pk = (i-5)))
+        dict_categorias[rip[0]]=lista_aux
     fileobj.close()    
     Film.objects.bulk_create(lista_peliculas)
+    
+    dict={}
+    for film in Film.objects.all():
+        genres = dict_categorias[str(film.id)]
+        
+        film.genres.set(genres)
+        dict[film.id] = film
     
     print("Movies inserted: " + str(Film.objects.count()))
     print("---------------------------------------------------------")
@@ -91,6 +121,7 @@ def populateRatings(u,m):
 def populateDatabase():
     deleteTables()
     populateOccupations()
+    populateGenres()
     u=populateUsers()
     m=populateFilms()
     populateRatings(u,m)
