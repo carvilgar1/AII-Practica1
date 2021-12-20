@@ -1,16 +1,8 @@
-<html>
-<head>
-<title>Sistema de Recomendacion - Movielens</title>
-</head>
-<body>
-<header>
-{% include 'header.html' %}
-
-<h1>Buscar Pelicula</h1>
+{%extends 'master.html'%}
+{% block titulo %}Buscar Pelicula{%endblock%}
+{% block contenido %}
 <form id='form' method='get' action=''>
 {{form.as_p}}
 <p><input type='submit' value='Confirm'/></p>
 </form>
-
-</body>
-</html>
+{%endblock%}

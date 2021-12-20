@@ -1,16 +1,12 @@
-<html>
-<head>
-<title>Sistema de Recomendacion - Movielens</title>
-</head>
-<body>
-{% include 'header.html' %}
+{%extends 'master.html'%}
+{% block titulo %}Tres Peliculas que mas se parecen a {{film.movieTitle}} son:{% block titulo %}
+
+{% block contenido %}
 <section>
-<h1>Tres Peliculas que mas se parecen a {{film.movieTitle}} son:</h1>
 <l>
 {% for f, s in films %}
 <li>Title: {{f.movieTitle}}   Similarity: {{s | floatformat:"2"}}</li>
 {% endfor %}
 </l>
 </section>
-</body>
-</html>
+{%endblock%}
