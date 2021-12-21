@@ -34,3 +34,8 @@ class Rating(models.Model):
     rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     def __str__(self):
         return str(self.rating)
+
+class Idiomas(models.Model):
+    idioma = models.CharField(max_length=100)
+    def __str__(self) -> str:
+        return self.idioma
