@@ -16,11 +16,16 @@ from django.core.validators import MinValueValidator,MaxValueValidator
 #     def __str__(self):
 #         return self.gender+" "+self.zipCode
 
+class Idiomas(models.Model):
+    idioma = models.CharField(max_length=100)
+    def __str__(self) -> str:
+        return self.idioma
+
 class Libro(models.Model):
     titulo = models.TextField(null=True, blank=True)
     autor = models.TextField(null=True, blank=True)
     genero = models.TextField()
-    idioma = models.TextField()
+    idioma = models.ForeignKey(Idiomas, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.titulo
@@ -35,7 +40,3 @@ class Rating(models.Model):
     def __str__(self):
         return str(self.rating)
 
-class Idiomas(models.Model):
-    idioma = models.CharField(max_length=100)
-    def __str__(self) -> str:
-        return self.idioma
