@@ -17,11 +17,12 @@ from django.core.validators import MinValueValidator,MaxValueValidator
 #         return self.gender+" "+self.zipCode
 
 class Idiomas(models.Model):
-    idioma = models.CharField(max_length=100)
+    idioma = models.CharField(primary_key=True, max_length=100)
     def __str__(self) -> str:
         return self.idioma
 
 class Libro(models.Model):
+    idLibro = models.IntegerField(primary_key=True)
     titulo = models.TextField(null=True, blank=True)
     autor = models.TextField(null=True, blank=True)
     genero = models.TextField()
