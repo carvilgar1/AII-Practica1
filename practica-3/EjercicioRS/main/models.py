@@ -22,11 +22,10 @@ class Idiomas(models.Model):
         return self.idioma
 
 class Libro(models.Model):
-    idLibro = models.IntegerField(primary_key=True)
     titulo = models.TextField(null=True, blank=True)
     autor = models.TextField(null=True, blank=True)
     genero = models.TextField()
-    idioma = models.ForeignKey(Idiomas, on_delete=models.SET_NULL)
+    idioma = models.ForeignKey(Idiomas, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.titulo

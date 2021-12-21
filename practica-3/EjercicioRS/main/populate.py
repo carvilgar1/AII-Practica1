@@ -1,3 +1,4 @@
+#encoding:utf-8
 from main.models import Rating, Libro, Idiomas
 import csv
 
@@ -9,13 +10,13 @@ def deleteTables():
     Libro.objects.all().delete()
     Rating.objects.all().delete()
 
-def populateLibro():
-    print("Loading libros...")
+def populateIdioma():
+    print("Loading idiomas...")
     
     lista=set()
     fileobj=open(path+"\\bookfeatures.csv", "r")
     next(fileobj)
-    for line in csv.reader(fileobj, delimiter=";"):
+    for line in csv.reader(fileobj, delimiter=";", **kwargs):
         lista.add(Idiomas(idioma=str(line[4].strip())))
     fileobj.close()
     Idiomas.objects.bulk_create(lista)
@@ -68,14 +69,12 @@ def populateRating():
 #     print("---------------------------------------------------------")
     
     
-# def populateDatabase():
-#     deleteTables()
-#     populateOccupations()
-#     populateGenres()
-#     u=populateUsers()
-#     m=populateFilms()
-#     populateRatings(u,m)
-#     print("Finished database population")
+def populateDatabase():
+    deleteTables()
+    populateIdioma()
+    populateLibro()
+    populateRating()
+    print("Finished database population")
     
 # if __name__ == '__main__':
 #     populateDatabase()
