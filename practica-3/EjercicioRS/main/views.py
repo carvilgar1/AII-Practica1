@@ -36,6 +36,7 @@ def loadRS(request):
     return render(request,'loadRS.html')
  
 # APARTADO A
+# RS filtrado colaborativo basado en usuarios
 def recommendedFilmsUser(request):
     if request.method=='GET':
         form = UserForm(request.GET, request.FILES)
@@ -58,6 +59,7 @@ def recommendedFilmsUser(request):
     return render(request,'search_user.html', {'form': form})
 
 # APARTADO B
+# RS filtrado colaborativo basado en items
 def recommendedFilmUserItems(request):
     if request.method=='GET':
         form = UserForm(request.GET, request.FILES)
@@ -81,6 +83,7 @@ def recommendedFilmUserItems(request):
     return render(request,'search_user.html', {'form': form})
 
 # APARTADO C
+# RS filtrado colaborativo basado en usuarios
 def similarFilms(request):
     film = None
     if request.method=='GET':
@@ -103,6 +106,7 @@ def similarFilms(request):
     return render(request,'search_film.html', {'form': form})
 
 #APARTADO D
+# RS filtrado colaborativo basado en items
 def recommendedUser(request):
     if request.method=='GET':
         form = FilmForm(request.GET, request.FILES)
@@ -127,6 +131,7 @@ def recommendedUser(request):
 
 
 #APARTADO E
+# RS filtrado colaborativo basado en usuarios
 def search(request):
     if request.method=='GET':
         form = UserForm(request.GET, request.FILES)
