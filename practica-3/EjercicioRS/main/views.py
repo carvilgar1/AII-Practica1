@@ -2,27 +2,8 @@ import shelve
 from main.models import Libro, Rating
 from main.forms import UserForm, FilmForm
 from django.shortcuts import render, get_object_or_404
-from main.recommendations import  transformPrefs, getRecommendations, topMatches, getRecommendedItems, calculateSimilarItems
+from main.recommendations import  load_similarities
 # from main.populate import populateDatabase
-
-
-# Funcion que carga en el diccionario Prefs todas las puntuaciones de usuarios a peliculas. Tambien carga el diccionario inverso
-# Serializa los resultados en dataRS.dat
-def loadDict():
-    Prefs={}   # matriz de usuarios y puntuaciones a cada a items
-    shelf = shelve.open("dataRS.dat")
-    ratings = Rating.objects.all()
-    for ra in ratings:
-        user = int(ra.user.id)
-        itemid = int(ra.film.id)
-        rating = float(ra.rating)
-        Prefs.setdefault(user, {})
-        Prefs[user][itemid] = rating
-    shelf['Prefs']=Prefs
-    shelf['ItemsPrefs']=transformPrefs(Prefs)
-    shelf['SimilarItems']=calculateSimilarItems(Prefs, n=10)
-    shelf.close()
-
 
 def index(request): 
     return render(request,'index.html')
@@ -32,7 +13,7 @@ def populateDB(request):
     return render(request,'populate.html')
 
 def loadRS(request):
-    loadDict()
+    load_similarities()
     return render(request,'loadRS.html')
  
 # APARTADO A
@@ -141,3 +122,6 @@ def search(request):
             return render(request,'ratedFilms.html', {'usuario':user})
     form=UserForm()
     return render(request,'search_user.html', {'form':form })
+
+
+
