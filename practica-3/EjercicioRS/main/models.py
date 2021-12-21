@@ -37,5 +37,5 @@ class Rating(models.Model):
     libro = models.ForeignKey(Libro, on_delete=models.CASCADE, null=True)
     rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     def __str__(self):
-        return str(self.rating)
+        return str(self.id) + ' ' + str(self.libro.titulo) +' '+ str(self.rating)
 

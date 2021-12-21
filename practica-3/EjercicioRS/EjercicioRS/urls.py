@@ -8,7 +8,7 @@ urlpatterns = [
     path('', views.index),
     path('populate/', views.populateDB),
     path('loadRS', views.loadRS),
-    # path('recommendedFilmsUser', views.recommendedFilmsUser),
+     path('recommendBooks/', views.recommendedBooks),
     # path('recommendedFilmsUserItem', views.recommendedFilmUserItems),
     # path('recommendedUserFilm', views.recommendedUser),
     # path('similarFilms', views.similarFilms),

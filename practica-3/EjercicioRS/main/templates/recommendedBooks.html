@@ -1,0 +1,22 @@
+{%extends 'master.html'%}
+
+
+
+{% block titulo %}Usuarios Recomendados para el Usuario {{ user }}{%endblock%}
+
+
+{% block contenido %}
+
+<form method="get" action="">
+	{{form.as_p}}
+	<input type="Submit" value="Buscar"/>
+</form>
+
+	{% for item in books %}
+		<ul>
+		<li>Titulo: {{item.0.titulo}}  Autor:{{item.0.autor}} Genero:{{item.0.genero}}    Score: {{item.1 | floatformat:"2"}}</li>
+		</ul>
+    {% empty %}
+		<h2> Insuficientes datos </h2>
+	{% endfor %}
+{%endblock%}

@@ -1,13 +1,13 @@
 {%extends 'master.html'%}
 
-{% block titulo %}Usuarios Recomendados para la Pelicula {{film.movieTitle}}{%endblock%}
+{% block titulo %}Usuarios Recomendados para el Usuario {{}}{%endblock%}
 
 {% block contenido %}
-	{% for item, score in items %}
+	{% for item in books %}
 		<ul>
-		<li>User ID:{{item.id}}   Edad:{{item.age}}  CP:{{item.zipCode}}   Score: {{score | floatformat:"2"}}</li>
+		<li>Titulo: {{item[0].tituloss}}  Autor:{{item[0].autor}} Genero:{{item[0].genero}}    Score: {{item | floatformat:"2"}}</li>
 		</ul>
-	{% empty %}
+		{% empty %}
 		<h2> Insuficientes datos </h2>
 	{% endfor %}
 {%endblock%}
