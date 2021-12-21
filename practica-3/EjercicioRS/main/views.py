@@ -1,9 +1,9 @@
 import shelve
-from main.models import UserInformation, Film, Rating
+from main.models import Libro, Rating
 from main.forms import UserForm, FilmForm
 from django.shortcuts import render, get_object_or_404
 from main.recommendations import  transformPrefs, getRecommendations, topMatches, getRecommendedItems, calculateSimilarItems
-from main.populate import populateDatabase
+# from main.populate import populateDatabase
 
 
 # Funcion que carga en el diccionario Prefs todas las puntuaciones de usuarios a peliculas. Tambien carga el diccionario inverso
@@ -28,7 +28,7 @@ def index(request):
     return render(request,'index.html')
 
 def populateDB(request):
-    populateDatabase() 
+    # populateDatabase() 
     return render(request,'populate.html')
 
 def loadRS(request):
