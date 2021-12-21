@@ -22,6 +22,7 @@ class Idiomas(models.Model):
         return self.idioma
 
 class Libro(models.Model):
+    idLibro = models.PositiveIntegerField(primary_key=True,default=0)
     titulo = models.TextField(null=True, blank=True)
     autor = models.TextField(null=True, blank=True)
     genero = models.TextField()

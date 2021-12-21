@@ -5,18 +5,18 @@ import csv
 path = "goodreads-dataset"
 
 def deleteTables():
+    # Idiomas.objects.all().delete()
+    # Libro.objects.all().delete()
+    # Rating.objects.all().delete()
     pass
-    Idiomas.objects.all().delete()
-    Libro.objects.all().delete()
-    Rating.objects.all().delete()
 
 def populateIdioma():
     print("Loading idiomas...")
     
     lista=set()
-    fileobj=open(path+"\\bookfeatures.csv", "r")
+    fileobj=open(path+"\\bookfeatures.csv", "r", encoding="utf-8")
     next(fileobj)
-    for line in csv.reader(fileobj, delimiter=";", **kwargs):
+    for line in csv.reader(fileobj, delimiter=";"):
         lista.add(Idiomas(idioma=str(line[4].strip())))
     fileobj.close()
     Idiomas.objects.bulk_create(lista)
@@ -28,10 +28,10 @@ def populateLibro():
     print("Loading libros...")
     
     lista=[]
-    fileobj=open(path+"\\bookfeatures.csv", "r")
+    fileobj=open(path+"\\bookfeatures.csv", "r", encoding="utf-8")
     next(fileobj)
     for line in csv.reader(fileobj, delimiter=";"):
-        lista.append(Libro(idLibro=int(line[0].strip()), titulo=str(line[1].strip()), autor=str(line[2].strip()), genero=str(line[3].strip()), idioma=str(line[4].strip())))
+        lista.append(Libro(idLibro=int(line[0].strip())), titulo=str(line[1].strip()), autor=str(line[2].strip()), genero=str(line[3].strip()), idioma=Idiomas.objects.get(str(line[4].strip())))
     fileobj.close()
     Libro.objects.bulk_create(lista)
     
@@ -45,7 +45,7 @@ def populateRating():
     fileobj=open(path+"\\ratings.csv", "r")
     next(fileobj)
     for line in csv.reader(fileobj, delimiter=";"):
-        lista.append(Rating(rating=str(line[0].strip()), userId=int(line[1].strip()), libro=int(line[2].strip())))
+        lista.append(Rating(rating=str(line[0].strip()), userId=int(line[1].strip()), libro=Libro.objects.get(pk=int(line[2].strip()))))
     fileobj.close()
     Rating.objects.bulk_create(lista)  # bulk_create hace la carga masiva para acelerar el proceso
     

@@ -13,5 +13,5 @@ urlpatterns = [
     # path('recommendedUserFilm', views.recommendedUser),
     # path('similarFilms', views.similarFilms),
     # path('search', views.search),
-    # path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
 ]
