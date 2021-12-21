@@ -5,10 +5,10 @@ import csv
 path = "goodreads-dataset"
 
 def deleteTables():
-    # Idiomas.objects.all().delete()
-    # Libro.objects.all().delete()
-    # Rating.objects.all().delete()
-    pass
+    Idiomas.objects.all().delete()
+    Libro.objects.all().delete()
+    Rating.objects.all().delete()
+
 
 def populateIdioma():
     print("Loading idiomas...")
@@ -31,7 +31,7 @@ def populateLibro():
     fileobj=open(path+"\\bookfeatures.csv", "r", encoding="utf-8")
     next(fileobj)
     for line in csv.reader(fileobj, delimiter=";"):
-        lista.append(Libro(idLibro=int(line[0].strip())), titulo=str(line[1].strip()), autor=str(line[2].strip()), genero=str(line[3].strip()), idioma=Idiomas.objects.get(str(line[4].strip())))
+        lista.append(Libro(idLibro=int(line[0].strip()), titulo=str(line[1].strip()), autor=str(line[2].strip()), genero=str(line[3].strip()), idioma=Idiomas.objects.get(idioma=str(line[4].strip()))))
     fileobj.close()
     Libro.objects.bulk_create(lista)
     
@@ -53,20 +53,6 @@ def populateRating():
     print("---------------------------------------------------------")
 
 
-       
-# def populateRatings(u,m):
-#     print("Loading ratings...")
-#     Rating.objects.all().delete()
-
-#     lista=[]
-#     fileobj=open(path+"\\u.data", "r")
-#     for line in fileobj.readlines():
-#         rip = line.split('\t')
-#         lista.append(Rating(user=u[int(rip[0].strip())], film=m[int(rip[1].strip())], rating=int(rip[2].strip()), rateDate= datetime.fromtimestamp(int(rip[3].strip())) ))
-#     fileobj.close()
-#     Rating.objects.bulk_create(lista)
-#     print("Ratings inserted: " + str(Rating.objects.count()))
-#     print("---------------------------------------------------------")
     
     
 def populateDatabase():
@@ -75,6 +61,4 @@ def populateDatabase():
     populateLibro()
     populateRating()
     print("Finished database population")
-    
-# if __name__ == '__main__':
-#     populateDatabase()
+
